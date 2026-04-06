@@ -1,0 +1,17 @@
+name: Auto Commit
+on:
+  schedule:
+    - cron: '0 * * * *'   # every hour
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Commit changes
+        run: |
+          git config --global user.name 'YourName'
+          git config --global user.email 'you@example.com'
+          git add .
+          git commit -m "Auto update"
+          git push
