@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Women Safety Tracker - Web</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* This makes the map fill the whole screen */
+        #map { height: 100vh; width: 100%; }
+        body { margin: 0; padding: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // 1. Setup the Map (Default view: Bengaluru)
+        var map = L.map('map').setView([12.9716, 77.5946], 15);
+
+        // 2. Load the Map Images (OpenStreetMap - FREE)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // 3. Create a Marker for the Blue Dot
+        var blueDot = L.circleMarker([12.9716, 77.5946], {
+            radius: 10,
+            fillColor: "#007bff",
+            color: "#fff",
+            weight: 2,
+            fillOpacity: 1
+        }).addTo(map);
+
+        // 4. LIVE TRACKING: This finds where you are
+        function updateLocation() {
+            navigator.geolocation.watchPosition(function(pos) {
+                var lat = pos.coords.latitude;
+                var lng = pos.coords.longitude;
+                var newLatLng = [lat, lng];
+
+                // Move the blue dot
+                blueDot.setLatLng(newLatLng);
+                // Center the map on you
+                map.setView(newLatLng);
+
+                console.log("Current Location:", lat, lng);
+                
+                // PERSON A -> PERSON B HANDOFF
+                // Person B will use these 'lat' and 'lng' values for the timer!
+            }, function(err) {
+                console.log("Wait for GPS permission...");
+            }, {
+                enableHighAccuracy: true
+            });
+        }
+
+        updateLocation();
+    </script>
+</body>
+</html>
